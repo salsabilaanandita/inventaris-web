@@ -10,6 +10,7 @@ try {
     // env() mengembalikan "" dan memicu ArgumentCountError pada Manager::createDriver()
     $driverDefaults = [
         'SESSION_DRIVER' => 'database',
+        'SESSION_LIFETIME' => '120',
         'CACHE_STORE' => 'database',
         'CACHE_DRIVER' => 'database',
         'LOG_CHANNEL' => 'stderr',
@@ -23,7 +24,7 @@ try {
 
     foreach ($driverDefaults as $key => $defaultVal) {
         $val = getenv($key);
-        if ($val === false || trim((string)$val) === '') {
+        if ($val === false || trim((string)$val) === '' || ($key === 'SESSION_LIFETIME' && (int)$val <= 0)) {
             putenv("{$key}={$defaultVal}");
             $_ENV[$key] = $defaultVal;
             $_SERVER[$key] = $defaultVal;
