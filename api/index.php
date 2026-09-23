@@ -11,6 +11,7 @@ try {
     $driverDefaults = [
         'SESSION_DRIVER' => 'database',
         'SESSION_LIFETIME' => '120',
+        'BCRYPT_ROUNDS' => '12',
         'CACHE_STORE' => 'database',
         'CACHE_DRIVER' => 'database',
         'LOG_CHANNEL' => 'stderr',
@@ -24,7 +25,10 @@ try {
 
     foreach ($driverDefaults as $key => $defaultVal) {
         $val = getenv($key);
-        if ($val === false || trim((string)$val) === '' || ($key === 'SESSION_LIFETIME' && (int)$val <= 0)) {
+        if ($val === false || trim((string)$val) === '' 
+            || ($key === 'SESSION_LIFETIME' && (int)$val <= 0)
+            || ($key === 'BCRYPT_ROUNDS' && ((int)$val < 4 || (int)$val > 31))
+        ) {
             putenv("{$key}={$defaultVal}");
             $_ENV[$key] = $defaultVal;
             $_SERVER[$key] = $defaultVal;
