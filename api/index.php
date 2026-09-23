@@ -9,11 +9,11 @@ try {
     // Pada serverless/Vercel, jika environment variable bernilai string kosong (""),
     // env() mengembalikan "" dan memicu ArgumentCountError pada Manager::createDriver()
     $driverDefaults = [
-        'SESSION_DRIVER' => 'cookie',
-        'CACHE_STORE' => 'array',
-        'CACHE_DRIVER' => 'array',
+        'SESSION_DRIVER' => 'database',
+        'CACHE_STORE' => 'database',
+        'CACHE_DRIVER' => 'database',
         'LOG_CHANNEL' => 'stderr',
-        'QUEUE_CONNECTION' => 'sync',
+        'QUEUE_CONNECTION' => 'database',
         'FILESYSTEM_DISK' => 'local',
         'BROADCAST_CONNECTION' => 'log',
         'MAIL_MAILER' => 'log',
