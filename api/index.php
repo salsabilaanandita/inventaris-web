@@ -5,6 +5,31 @@ use Illuminate\Http\Request;
 define('LARAVEL_START', microtime(true));
 
 try {
+    // Sanitasi environment variables kosong untuk driver Laravel
+    // Pada serverless/Vercel, jika environment variable bernilai string kosong (""),
+    // env() mengembalikan "" dan memicu ArgumentCountError pada Manager::createDriver()
+    $driverDefaults = [
+        'SESSION_DRIVER' => 'cookie',
+        'CACHE_STORE' => 'array',
+        'CACHE_DRIVER' => 'array',
+        'LOG_CHANNEL' => 'stderr',
+        'QUEUE_CONNECTION' => 'sync',
+        'FILESYSTEM_DISK' => 'local',
+        'BROADCAST_CONNECTION' => 'log',
+        'MAIL_MAILER' => 'log',
+        'DB_CONNECTION' => 'pgsql',
+        'APP_MAINTENANCE_DRIVER' => 'file',
+    ];
+
+    foreach ($driverDefaults as $key => $defaultVal) {
+        $val = getenv($key);
+        if ($val === false || trim((string)$val) === '') {
+            putenv("{$key}={$defaultVal}");
+            $_ENV[$key] = $defaultVal;
+            $_SERVER[$key] = $defaultVal;
+        }
+    }
+
     // Buat direktori temporary yang dibutuhkan Laravel di /tmp
     $storageDirs = [
         '/tmp/storage',
